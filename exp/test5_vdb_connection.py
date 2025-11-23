@@ -1,4 +1,3 @@
-# exp/test4_query.py
 import os
 import numpy as np
 from dotenv import load_dotenv
