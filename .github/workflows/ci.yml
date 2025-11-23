@@ -78,6 +78,11 @@ jobs:
           pip install -r requirements.txt || true
           pip install mkdocs mkdocs-material
 
-      - name: Build docs
+      - name: Build docs (skip if mkdocs.yml missing)
         run: |
-          mkdocs build
+          if [ -f mkdocs.yml ]; then
+            mkdocs build
+          else
+            echo "mkdocs.yml not found — skipping docs build."
+          fi
+
