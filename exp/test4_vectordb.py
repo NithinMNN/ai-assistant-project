@@ -1,8 +1,9 @@
-import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+import google.generativeai as genai
 import chromadb
 from chromadb.errors import NotFoundError
+import numpy as np
 
 load_dotenv()
 
@@ -13,18 +14,24 @@ if not API_KEY:
 
 genai.configure(api_key=API_KEY)
 
+base_dir = os.path.dirname(__file__)
+file_path = os.path.join(base_dir, "memory", "something.txt")
+
 try:
-    with open(os.path.join("memory", "something.txt"), "r") as f:
+    with open(file_path, "r") as f:
         knowledge_text = f.read()
 except FileNotFoundError:
     print("Error: The 'memory/something.txt' file was not found.")
     exit()
 
 embedding_model = "models/text-embedding-004"
-embedding = genai.embed_content(model=embedding_model, content=knowledge_text)
-vector = embedding["embedding"]
+embedding_resp = genai.embed_content(model=embedding_model, content=knowledge_text)
+raw_vector = embedding_resp["embedding"]
 
-db_path = "my_chroma_db"
+vector = np.asarray(raw_vector, dtype=float)
+
+base_dir = os.path.dirname(__file__)
+db_path = os.path.join(base_dir, "my_chroma_db")
 db_exists = os.path.exists(db_path)
 
 client = chromadb.PersistentClient(path=db_path)
