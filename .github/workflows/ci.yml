@@ -51,7 +51,7 @@ jobs:
         run: |
           if ls **/*.py > /dev/null 2>&1; then
             echo "Python files found — running mypy"
-          mypy .
+            mypy .
           else
             echo "No Python files found — skipping mypy."
           fi
