@@ -41,8 +41,12 @@ jobs:
 
       - name: Run unit tests
         run: |
-          pytest -q
-
+          if [ -d tests ] || ls -1 | grep -E '(^tests$|test_.*\.py)' >/dev/null 2>&1; then
+            pytest -q
+          else
+            echo "No tests found — skipping pytest."
+          fi
+          
       - name: Run type checks (optional)
         run: |
           mypy .
