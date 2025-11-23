@@ -12,7 +12,7 @@ if not API_KEY:
 
 genai.configure(api_key=API_KEY)
 
-client = chromadb.PersistentClient(path="my_chroma_db") 
+client = chromadb.PersistentClient(path="my_chroma_db")
 
 try:
     collection = client.get_collection("random_facts")
@@ -25,23 +25,17 @@ except ValueError:
 
 question = "What is the day today?"
 
-embedding_model = 'models/text-embedding-004'
-question_embedding = genai.embed_content(
-    model=embedding_model,
-    content=question
-)['embedding']
+embedding_model = "models/text-embedding-004"
+question_embedding = genai.embed_content(model=embedding_model, content=question)["embedding"]
 
-result = collection.query(
-    query_embeddings=[question_embedding],
-    n_results=1
-)
+result = collection.query(query_embeddings=[question_embedding], n_results=1)
 
-if result and result['documents'] and result['documents'][0]:
-    found_memory = result['documents'][0][0]
+if result and result["documents"] and result["documents"][0]:
+    found_memory = result["documents"][0][0]
     print(f"\nI asked: '{question}'")
     print("...")
     print(f"The most relevant memory I found is: '{found_memory}'")
 else:
     print(f"\nI asked: '{question}'")
     print("...")
-    print("I couldn't find a relevant memory for that question.")     
+    print("I couldn't find a relevant memory for that question.")

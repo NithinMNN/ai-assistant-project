@@ -1,6 +1,7 @@
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 API_KEY = os.getenv("GOOGLE_API_KEY")
 if not API_KEY:
@@ -10,21 +11,18 @@ if not API_KEY:
 genai.configure(api_key=API_KEY)
 try:
     base_dir = os.path.dirname(__file__)
-    file_path = os.path.join(base_dir, 'memory', 'something.txt')
-    with open(file_path, 'r') as f:
+    file_path = os.path.join(base_dir, "memory", "something.txt")
+    with open(file_path, "r") as f:
         memory_txt = f.read()
 except FileNotFoundError:
     print("Error: The 'memory/something.txt' file was not found.")
     print("Please make sure you've created the folder and file as described.")
     exit()
 print(f"Original text from your note: {memory_txt}")
-embedding_model = 'models/text-embedding-004'
+embedding_model = "models/text-embedding-004"
 try:
-    embedding = genai.embed_content(
-        model=embedding_model,
-        content=memory_txt
-    )
-    vector = embedding['embedding']
+    embedding = genai.embed_content(model=embedding_model, content=memory_txt)
+    vector = embedding["embedding"]
     print("\n✅ I've turned that text into a 'vector' or 'embedding'.")
     print("Here's a small sample of it:")
     print(str(vector[:5]) + "...")

@@ -1,10 +1,10 @@
 import os
 
 base_dir = os.path.dirname(__file__)
-file_path = os.path.join(base_dir, 'memory', 'something.txt')
+file_path = os.path.join(base_dir, "memory", "something.txt")
 
 try:
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         content = f.read()
         print("File content: ")
         print("---")

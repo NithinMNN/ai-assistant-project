@@ -5,7 +5,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # --- Step 1: The "Encode" Phase ---
 # Load a pre-trained model capable of understanding text.
 # 'all-MiniLM-L6-v2' is a great, lightweight model to start with.
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Our library of documents we want to search through.
 documents = [
@@ -13,7 +13,7 @@ documents = [
     "A chef is carefully slicing vegetables for a gourmet meal.",
     "The launch window for the rocket is closing soon.",
     "Ancient Roman recipes often included exotic spices.",
-    "The astronaut is conducting experiments in zero gravity."
+    "The astronaut is conducting experiments in zero gravity.",
 ]
 
 # Use the model to convert our documents into numerical embeddings.
