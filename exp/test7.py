@@ -2,10 +2,8 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 import chromadb
-from chromadb.errors import NotFoundError
-from typing import Optional
-import numpy as np
 
+# --- Setup ---
 load_dotenv()
 
 API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -17,15 +15,15 @@ genai.configure(api_key=API_KEY)
 embedding_model = "models/text-embedding-004"
 llm = genai.GenerativeModel("gemini-2.5-flash-preview-09-2025")
 
+# --- Connect to ChromaDB ---
 base_dir = os.path.dirname(__file__)
 db_path = os.path.join(base_dir, "my_chroma_db")
-
 client = chromadb.PersistentClient(path=db_path)
 try:
     collection = client.get_collection("random_facts")
-except NotFoundError:
+except ValueError:
     print("Error: The 'random_facts' collection does not exist.")
-    print("Please run test4_vectordb.py first to create and store your first memory.")
+    print("Please run the script from Chapter 3 to create and store your first memory.")
     exit()
 
 print("Hello! I'm your personal AI assistant. I now have a memory of our facts.")
@@ -33,21 +31,26 @@ print("Type 'exit' or 'quit' to end the chat.")
 
 # --- The Main Chat Loop ---
 while True:
-    user_question = input("\nYou: ")
+    user_question = input("\nYou: ").strip()
 
     if user_question.lower() in ["quit", "exit"]:
         print("Goodbye! It was nice chatting with you.")
         break
 
+    # Check for empty input
+    if not user_question:
+        print("Please enter a question or type 'exit' to quit.")
+        continue
+
     # --- Step 1: Look up relevant facts in our memory ---
-    question_embedding_response = genai.embed_content(model=embedding_model, content=user_question)["embedding"]
-    question_embedding = np.array(question_embedding_response, dtype=np.float32)
+    question_embedding = genai.embed_content(model=embedding_model, content=user_question)["embedding"]
 
     results = collection.query(query_embeddings=[question_embedding], n_results=1)
 
-    retrieved_memory: Optional[str] = None
     if results and results["documents"] and results["documents"][0]:
         retrieved_memory = results["documents"][0][0]
+    else:
+        retrieved_memory = None
 
     # --- Step 2: Formulate the answer ---
     if retrieved_memory:
@@ -59,7 +62,7 @@ while True:
             "\nPlease answer the following question: "
             f"'{user_question}'"
         )
-        print(f"AI (thinking with memory): I found a stored fact -  '{retrieved_memory}'")
+        print(f"AI (thinking with memory): I found a relevant fact... '{retrieved_memory}'")
     else:
         prompt_with_context = user_question
         print("AI (thinking): I don't have a specific memory for this, but I'll answer from my general knowledge.")
