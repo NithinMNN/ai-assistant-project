@@ -3,6 +3,8 @@ import os
 from dotenv import load_dotenv
 import chromadb
 from chromadb.errors import NotFoundError
+from typing import Optional
+import numpy as np
 
 load_dotenv()
 
@@ -39,7 +41,8 @@ while True:
 
     # --- Step 1: Look up relevant facts in our memory ---
     # First, we create an embedding for the user's question
-    question_embedding = genai.embed_content(model=embedding_model, content=user_question)["embedding"]
+    question_embedding_response = genai.embed_content(model=embedding_model, content=user_question)["embedding"]
+    question_embedding = np.array(question_embedding_response, dtype=np.float32)
 
     # Then, we query our collection to find the most relevant memory
     results = collection.query(
@@ -47,10 +50,9 @@ while True:
     )
 
     # Let's get the text of the most relevant memory
+    retrieved_memory: Optional[str] = None
     if results and results["documents"] and results["documents"][0]:
         retrieved_memory = results["documents"][0][0]
-    else:
-        retrieved_memory = None  # No memory was found
 
     # --- Step 2: Formulate the answer ---
     if retrieved_memory:
