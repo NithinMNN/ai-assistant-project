@@ -1,5 +1,9 @@
 # Ignore ChromaDB database folder in exp directory
 exp/my_chroma_db/
+
+# Project context (personal reference file)
+project_context.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
