@@ -114,7 +114,7 @@ The `exp/` folder contains progressive learning scripts:
 | `test4_vectordb.py` | ChromaDB vector storage |
 | `test5_*.py` | Semantic search & similarity |
 | `test6_rag.py` | Full RAG pipeline |
-| `test7.py` | Production-ready chatbot |
+| `test7.py` | Chatbot |
 
 ## 🔧 Tech Stack
 
@@ -125,7 +125,3 @@ The `exp/` folder contains progressive learning scripts:
 | ChromaDB | Vector database |
 | Streamlit | Web interface |
 | Pre-commit | Code quality automation |
-
-## 📄 License
-
-MIT License
